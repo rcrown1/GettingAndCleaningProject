@@ -1,5 +1,5 @@
 ## Getting and Cleaning Data Course Project
-
+# Test Change 2/28/2016
 # Set working directory for consistancy
 setwd("~/DataSciProjects/GettingNCleaning/Project/GettingAndCleaningProject")
 # Download data and extract data
