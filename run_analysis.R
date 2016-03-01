@@ -1,12 +1,14 @@
 ## Getting and Cleaning Data Course Project
 # Test Change 2/28/2016
 # Set working directory for consistancy
-setwd("~/DataSciProjects/GettingNCleaning/Project/GettingAndCleaningProject")
+setwd("/Users/rcrown/GettingAndCleaningProject/")
+# Windows Settings
+# setwd("~/DataSciProjects/GettingNCleaning/Project/GettingAndCleaningProject")
 # Download data and extract data
 fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
-download.file(fileUrl, "./Dataset.zip")
+download.file(fileUrl, "./Dataset.zip",method="curl")
 unzip("./Dataset.zip")
-setwd("~/DataSciProjects/GettingNCleaning/Project/GettingAndCleaningProject/UCI HAR Dataset/test")
+setwd("./UCI HAR Dataset/test")
 library(dplyr)
 #Prepare Test Data
 #read data
@@ -17,6 +19,11 @@ colnames(features) <- c("ID","NAME")
 #apply measure names to data frame containing measure data
 col_names <- features[,2]
 colnames(x_test) <- col_names
+
+#narrow columns only to mean and standard deviations
+narrow <- x_test[(grep(("mean|std"),colnames(x_test)))]
+#remove mean frequencies from columns
+narrow <- narrow[-(grep(("Freq"),colnames(narrow)))]
 # Assemble activity label for all measures
 # read y_test
 y_test <- read.table("./y_test.txt")
@@ -27,17 +34,18 @@ names(activity_labels)
 y_activity_lables <- merge(y_test,activity_labels)
 colnames(y_activity_lables) <-c("ID","Activity.Name")
 # merge activity lables column into measure data
-x_test2 <- cbind(y_activity_lables$Activity_Name,x_test)
-head(x_test2)
 head(y_activity_lables)
+y_activity_lables
+y_activity_lables <- select(y_activity_lables, Activity.Name)
+narrow <- cbind(y_activity_lables,narrow)
 # read subject_test 
 subjects <- read.table("subject_test.txt")
 # merge subject_test with measure data
 colnames(subjects) <-("Subject.ID")
 head(subjects)
-x_test3 <- cbind(subjects,x_test2)
-# subset only mean and std measures
-names(x_test3)
+narrow <- cbind(subjects,narrow)
+flip <- gather(narrow, measure_name, measure_value, 3:68)
+head(flip)
 ## apply above steps to train data
 # read y_train
 setwd("../train")
