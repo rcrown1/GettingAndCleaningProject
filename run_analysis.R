@@ -1,98 +1,44 @@
 ## Getting and Cleaning Data Course Project
-# Test Change 2/28/2016
 # Set working directory for consistancy
 setwd("/Users/rcrown/GettingAndCleaningProject/")
-# Windows Settings
-# setwd("~/DataSciProjects/GettingNCleaning/Project/GettingAndCleaningProject")
 # Download data and extract data
 fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 download.file(fileUrl, "./Dataset.zip",method="curl")
 unzip("./Dataset.zip")
-setwd("./UCI HAR Dataset/test")
+setwd("./UCI HAR Dataset")
 library(dplyr)
-#Prepare Test Data
-#read data
-x_test <- read.table("X_test.txt")
-#read measure names
-features <- read.table("../features.txt")
-colnames(features) <- c("ID","NAME")
-#apply measure names to data frame containing measure data
-col_names <- features[,2]
-colnames(x_test) <- col_names
+#read and clean up measure names
+features <- read.table("features.txt")
+features[,2] = gsub('mean', 'Mean', features[,2])
+features[,2] = gsub('std', 'Std', features[,2])
+features[,2] = gsub('[-()]', '', features[,2])
 
-#narrow columns only to mean and standard deviations
-narrow <- x_test[(grep(("mean|std"),colnames(x_test)))]
-#remove mean frequencies from columns
-narrow <- narrow[-(grep(("Freq"),colnames(narrow)))]
-# Assemble activity label for all measures
-# read y_test
-y_test <- read.table("./y_test.txt")
-activity_labels <- read.table("../activity_labels.txt")
-# join y_test to activity lables
-names(y_test)
-names(activity_labels)
-y_activity_lables <- merge(y_test,activity_labels)
-colnames(y_activity_lables) <-c("ID","Activity.Name")
-# merge activity lables column into measure data
-head(y_activity_lables)
-y_activity_lables
-y_activity_lables <- select(y_activity_lables, Activity.Name)
-narrow <- cbind(y_activity_lables,narrow)
-# read subject_test 
-subjects <- read.table("subject_test.txt")
-# merge subject_test with measure data
-colnames(subjects) <-("Subject.ID")
-head(subjects)
-narrow <- cbind(subjects,narrow)
-flip <- gather(narrow, measure_name, measure_value, 3:68)
-head(flip)
-## apply above steps to train data
-# read y_train
-setwd("../train")
-x_train <- read.table("X_train.txt")
-#apply measure names to data frame containing measure data
-col_names <- features[,2]
-colnames(x_train) <- col_names
-y_train <- read.table("y_train.txt")
-#activity_labels <- read.table("../activity_labels.txt")
-# join y_train to activity lables
-y_activity_lables <- merge(y_train,activity_labels)
-colnames(y_activity_lables) <-c("ID","Activity.Name")
-# merge activity lables column into measure data
-x_train2 <- cbind(y_activity_lables$Activity.Name,x_train)
-names(x_train2)
-head(y_activity_lables)
-# read subject_test 
-subjects <- read.table("subject_train.txt")
-# merge subject_test with measure data
-colnames(subjects) <-("Subject.ID")
-head(subjects)
-x_train3 <- cbind(subjects,x_train2)
-# subset only mean and std measures
-names(x_train3)
-# merge train and test data
+#Read Measure Data and assign cleaned up names
+x_test <- read.table("./test/X_test.txt")
+x_train <- read.table("./train/X_train.txt")
+colnames(x_test) <- features[,2]
+colnames(x_train) <- features[,2]
 
-# update column lables with easier to read names
+#narrow columns only to Mean and Standard Deviations (exclude Frequencies)
+narrow_test <- x_test[(grep(("Mean|Std"),colnames(x_test)))]
+narrow_test <- narrow_test[-(grep(("Freq"),colnames(narrow_test)))]
+narrow_train <- x_train[(grep(("Mean|Std"),colnames(x_train)))]
+narrow_train <- narrow_train[-(grep(("Freq"),colnames(narrow_train)))]
 
+# merge subject IDs and activity lables
+test_activity_lables <- merge(read.table("./test/y_test.txt"),read.table("activity_labels.txt"))
+complete_test <- cbind(read.table("./test/subject_test.txt"),test_activity_lables[,2],narrow_test)
+train_activity_lables <- merge(read.table("./train/y_train.txt"),read.table("activity_labels.txt"))
+complete_train <- cbind(read.table("./train/subject_train.txt"),train_activity_lables[,2],narrow_train)
 
+#merge two data sets 
+colnames(complete_train)[1:2] <- c("Subject","Activity")
+colnames(complete_test)[1:2] <- c("Subject","Activity")
+complete_set <- rbind(complete_train, complete_test)
+write.csv(complete_set, file = "tidy.csv")
 
-#
-
-
-
-#Identify columns which contain mean or deviation
-col.subset.df <- filter(features, grepl('mean|std|Mean', NAME))
-col.subset.df2 <- filter(col.subset.df, !grepl('Freq',NAME))
-col.subset <- as.vector(col.subset.df2[,2])
-col.subset
-select_(x_train3,col.subset)
-select_(x_train3,"tBodyAcc-mean()-x")
-getwd()
-
-head(ytest)
-head(activity_labels)
-# Join y lable ID to text descriptions
-names(Xtest)
-col_names
-str(xtest)
-head(xtest)
+# create summary data set which has the Average Measure Value for each
+# Subject, Activity and Measure
+flip <- gather(complete_set, MeasureName, MeasureVal, 3:75)
+tidy_smry <- summarise(group_by(flip,Subject, Activity, MeasureName),mean(MeasureVal))
+write.csv(tidy_smry, file = "tidy_smry.csv")
