@@ -35,10 +35,11 @@ complete_train <- cbind(read.table("./train/subject_train.txt"),train_activity_l
 colnames(complete_train)[1:2] <- c("Subject","Activity")
 colnames(complete_test)[1:2] <- c("Subject","Activity")
 complete_set <- rbind(complete_train, complete_test)
-write.csv(complete_set, file = "tidy.csv")
+setwd("../")
+write.table(complete_set, file = "tidy.txt", row.names = FALSE)
 
 # create summary data set which has the Average Measure Value for each
 # Subject, Activity and Measure
 flip <- gather(complete_set, MeasureName, MeasureVal, 3:75)
 tidy_smry <- summarise(group_by(flip,Subject, Activity, MeasureName),mean(MeasureVal))
-write.csv(tidy_smry, file = "tidy_smry.csv")
+write.table(tidy_smry, file = "tidy_smry.txt", row.names = FALSE)

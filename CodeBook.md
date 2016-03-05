@@ -25,6 +25,6 @@ The run_analysis.R script downloads, extracts and performs several transformatio
 3. Narrow the measures to only Standard Deviations and Mean Features
 4. Assign the appropriate Activity and Subject to each row of measurements.
 5. Merge the test and training sets of data.
-6. Write the first tidy data set to tidy.csv.
+6. Write the first tidy data set to tidy.txt.
 7. Piviot and summarize so rows contain the average measurement for each subject, activity and feature.
-8. Write the second tidy data set to tidy_smry.csv.
+8. Write the second tidy data set to tidy_smry.txt.
