@@ -28,3 +28,55 @@ The run_analysis.R script downloads, extracts and performs several transformatio
 6. Write the first tidy data set to tidy.txt.
 7. Piviot and summarize so rows contain the average measurement for each subject, activity and feature.
 8. Write the second tidy data set to tidy_smry.txt.
+
+## Full list of Variables in set
+
+##time domain signals (X axis listed below, but Y, Z axis present in set)
+tBodyAccMeanX - mean body acceleration signal
+tBodyAccStdX - standard deviation of body acceleration signal                   
+tGravityAccMeanX - mean gravity acceleration signal
+tGravityAccStdX - standard deviation of gravity acceleration signal                 
+tBodyAccJerkMeanX - body linear acceleration and angular velocity
+tBodyAccJerkStdX - body linear acceleration and angular velocity                 
+tBodyGyroMeanX - mean body gyroscope signal
+tBodyGyroStdX - standard deviation of body gyroscope signal                   
+tBodyGyroJerkMeanX - mean body linear acceleration and angular velocity
+tBodyGyroJerkStdX - standard deviation of body linear acceleration and angular velocity
+
+##frequency domain signals (X axis listed below, but Y, Z axis present in set)
+fBodyAccMeanX - mean body acceleration signal
+fBodyAccStdX - standard deviation of body acceleration signal                    
+fBodyAccJerkMeanX - body linear acceleration and angular velocity
+fBodyAccJerkStdX - standard deviation of gravity acceleration signal                  
+fBodyGyroMeanX - mean body gyroscope signal
+fBodyGyroStdX - standard deviation of body gyroscope signal                   
+
+angleX,gravityMean - mean of angle gravity measurement (also available in Y,Z axis)
+
+## magnitude time domain signals
+tBodyAccMagMean - mean body acceleration signal
+tBodyAccMagStd - standard deviation of body acceleration signal                   
+tGravityAccMagMean - mean gravity acceleration signal
+tGravityAccMagStd - standard deviation of gravity acceleration signal                
+tBodyAccJerkMagMean - body linear acceleration and angular velocity
+tBodyAccJerkMagStd - body linear acceleration and angular velocity               
+tBodyGyroMagMean - mean body gyroscope signal
+tBodyGyroMagStd - standard deviation of body gyroscope signal                    
+tBodyGyroJerkMagMean - mean body linear acceleration and angular velocity
+tBodyGyroJerkMagStd - standard deviation of body linear acceleration and angular velocity
+
+## magnitude frequency domain signals
+fBodyAccMagMean - mean body acceleration signal                   
+fBodyAccMagStd  - standard deviation of body acceleration signal                   
+fBodyBodyAccJerkMagMean  - body linear acceleration and angular velocity          
+fBodyBodyAccJerkMagStd - body linear acceleration and angular velocity          
+fBodyBodyGyroMagMean - mean body gyroscope signal              
+fBodyBodyGyroMagStd - standard deviation of body gyroscope signal              
+fBodyBodyGyroJerkMagMean - mean body linear acceleration and angular velocity          
+fBodyBodyGyroJerkMagStd - standard deviation of body linear acceleration and angular velocity          
+
+## Angle between vectors
+angletBodyAccMean,gravity          
+angletBodyAccJerkMean,gravityMean 
+angletBodyGyroMean,gravityMean     
+angletBodyGyroJerkMean,gravityMean
